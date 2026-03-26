@@ -1,11 +1,13 @@
 {
   "name": "Nexvora Smart Calculator",
   "short_name": "NexvoraCalc",
-  "start_url": "./index.html",
+  "description": "Smart Scientific Calculator by Nexvora Lab's | Developed by Abdur Rahman",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#1a1a1a",
   "theme_color": "#00ffcc",
-  "description": "Smart Scientific Calculator by Nexvora Lab's",
   "icons": [
     {
       "src": "icon-192.png",
