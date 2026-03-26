@@ -2,207 +2,190 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexvora Smart Scientific Calculator</title>
+<title>Nexvora Pro Calculator</title>
 
 <link rel="manifest" href="manifest.json">
 
 <style>
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0f172a;
-  color:white;
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: white;
 }
 
-.container{
-  max-width:420px;
-  margin:auto;
-  padding:10px;
+.app {
+  max-width: 420px;
+  margin: auto;
+  padding: 15px;
 }
 
-.title{
-  text-align:center;
-  font-size:22px;
-  margin-bottom:10px;
+.title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 10px;
 }
 
-#display{
-  width:100%;
-  height:70px;
-  font-size:26px;
-  text-align:right;
-  border:none;
-  border-radius:12px;
-  padding:10px;
-  margin-bottom:10px;
-  background:#020617;
-  color:#00ffcc;
+.display {
+  width: 100%;
+  height: 80px;
+  font-size: 30px;
+  text-align: right;
+  border-radius: 15px;
+  padding: 10px;
+  background: #020617;
+  color: #00ffcc;
+  border: none;
+  margin-bottom: 10px;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
 }
 
-button{
-  height:55px;
-  font-size:16px;
-  border:none;
-  border-radius:10px;
-  background:#1e293b;
-  color:white;
+button {
+  height: 65px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  transition: 0.2s;
 }
 
-button:active{background:#334155;}
+button:active {
+  background: #334155;
+}
 
-.op{background:#0ea5e9;}
-.equal{background:#22c55e;}
-.fun{background:#9333ea;}
+.op { background: #0ea5e9; }
+.eq { background: #22c55e; }
+.fn { background: #9333ea; }
 
-footer{
-  text-align:center;
-  margin-top:15px;
-  font-size:13px;
-  opacity:0.7;
+footer {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  opacity: 0.7;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-<div class="title">🧠 Nexvora Smart Calculator</div>
+<div class="title">🧠 Nexvora Pro Calculator</div>
 
-<input id="display" readonly>
+<input id="display" class="display" readonly>
 
 <div class="grid">
 
 <button onclick="clearAll()" class="op">C</button>
-<button onclick="deleteOne()">⌫</button>
-<button onclick="append('(')">(</button>
-<button onclick="append(')')">)</button>
+<button onclick="del()">⌫</button>
+<button onclick="append('%')">%</button>
 <button onclick="append('/')">÷</button>
 
 <button onclick="append('7')">7</button>
 <button onclick="append('8')">8</button>
 <button onclick="append('9')">9</button>
 <button onclick="append('*')">×</button>
-<button onclick="sqrt()" class="fun">√</button>
 
 <button onclick="append('4')">4</button>
 <button onclick="append('5')">5</button>
 <button onclick="append('6')">6</button>
 <button onclick="append('-')">-</button>
-<button onclick="square()" class="fun">x²</button>
 
 <button onclick="append('1')">1</button>
 <button onclick="append('2')">2</button>
 <button onclick="append('3')">3</button>
 <button onclick="append('+')">+</button>
-<button onclick="power()" class="fun">xʸ</button>
 
 <button onclick="append('0')">0</button>
 <button onclick="append('.')">.</button>
-<button onclick="calculate()" class="equal">=</button>
-<button onclick="percent()">%</button>
-<button onclick="cube()" class="fun">x³</button>
+<button onclick="calculate()" class="eq">=</button>
+<button onclick="sqrt()" class="fn">√</button>
 
-<button onclick="sin()" class="fun">sin</button>
-<button onclick="cos()" class="fun">cos</button>
-<button onclick="tan()" class="fun">tan</button>
-<button onclick="log()" class="fun">log</button>
-<button onclick="ln()" class="fun">ln</button>
+<button onclick="square()" class="fn">x²</button>
+<button onclick="cube()" class="fn">x³</button>
+<button onclick="power()" class="fn">xʸ</button>
+<button onclick="factorial()" class="fn">x!</button>
 
-<button onclick="factorial()" class="fun">x!</button>
+<button onclick="sin()" class="fn">sin</button>
+<button onclick="cos()" class="fn">cos</button>
+<button onclick="tan()" class="fn">tan</button>
+<button onclick="log()" class="fn">log</button>
+
+<button onclick="ln()" class="fn">ln</button>
 <button onclick="append('Math.PI')">π</button>
 <button onclick="append('Math.E')">e</button>
 <button onclick="random()">Rand</button>
-<button onclick="ans()">ANS</button>
 
-<button onclick="memoryAdd()">M+</button>
-<button onclick="memorySub()">M-</button>
-<button onclick="memoryRecall()">MR</button>
-<button onclick="memoryClear()">MC</button>
-<button onclick="toggleMode()" class="op">MODE</button>
+<button onclick="mAdd()">M+</button>
+<button onclick="mSub()">M-</button>
+<button onclick="mRecall()">MR</button>
+<button onclick="mClear()">MC</button>
 
 </div>
 
 <footer>
-✨ Created by Abdur Rahman <br>
+✨ Created by Abdur Rahman  
 🚀 Nexvora Lab's
 </footer>
 
 </div>
 
 <script>
-let display=document.getElementById("display");
-let memory=0;
-let lastAnswer=0;
-let deg=true;
+let d = document.getElementById("display");
+let memory = 0;
 
-// Basic
-function append(v){display.value+=v;}
-function clearAll(){display.value="";}
-function deleteOne(){display.value=display.value.slice(0,-1);}
+// input
+function append(v){ d.value += v; }
+function clearAll(){ d.value=""; }
+function del(){ d.value = d.value.slice(0,-1); }
 
-// Calculate
+// calculate
 function calculate(){
- try{
-  let exp=display.value.replace(/×/g,'*').replace(/÷/g,'/');
-  lastAnswer=eval(exp);
-  display.value=lastAnswer;
- }catch{display.value="Error";}
+  try{
+    let exp = d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    d.value = eval(exp);
+  }catch{
+    d.value="Error";
+  }
 }
 
-// %
-function percent(){display.value=eval(display.value)/100;}
+// functions
+function sqrt(){ d.value = Math.sqrt(eval(d.value)); }
+function square(){ d.value = Math.pow(eval(d.value),2); }
+function cube(){ d.value = Math.pow(eval(d.value),3); }
+function power(){ d.value += "**"; }
 
-// Power
-function power(){display.value+="**";}
+function sin(){ d.value = Math.sin(eval(d.value)); }
+function cos(){ d.value = Math.cos(eval(d.value)); }
+function tan(){ d.value = Math.tan(eval(d.value)); }
 
-// Functions
-function sqrt(){display.value=Math.sqrt(eval(display.value));}
-function square(){display.value=Math.pow(eval(display.value),2);}
-function cube(){display.value=Math.pow(eval(display.value),3);}
-
-// Degree/Radian convert
-function toRad(x){return deg?x*Math.PI/180:x;}
-
-function sin(){display.value=Math.sin(toRad(eval(display.value)));}
-function cos(){display.value=Math.cos(toRad(eval(display.value)));}
-function tan(){display.value=Math.tan(toRad(eval(display.value)));}
-
-function log(){display.value=Math.log10(eval(display.value));}
-function ln(){display.value=Math.log(eval(display.value));}
+function log(){ d.value = Math.log10(eval(d.value)); }
+function ln(){ d.value = Math.log(eval(d.value)); }
 
 function factorial(){
- let n=eval(display.value);
- if(n<0)return display.value="Error";
+ let n = eval(d.value);
+ if(n<0) return d.value="Error";
  let r=1;
- for(let i=1;i<=n;i++)r*=i;
- display.value=r;
+ for(let i=1;i<=n;i++) r*=i;
+ d.value=r;
 }
 
-function random(){display.value=Math.random();}
-function ans(){display.value+=lastAnswer;}
+function random(){ d.value = Math.random(); }
 
-// Memory
-function memoryAdd(){memory+=Number(display.value)||0;}
-function memorySub(){memory-=Number(display.value)||0;}
-function memoryRecall(){display.value=memory;}
-function memoryClear(){memory=0;}
+// memory
+function mAdd(){ memory += Number(d.value)||0; }
+function mSub(){ memory -= Number(d.value)||0; }
+function mRecall(){ d.value = memory; }
+function mClear(){ memory = 0; }
 
-// Mode toggle
-function toggleMode(){
- deg=!deg;
- alert(deg?"Degree Mode":"Radian Mode");
-}
-
-// Service Worker
-if('serviceWorker'in navigator){
+// offline
+if('serviceWorker' in navigator){
  navigator.serviceWorker.register('service-worker.js');
 }
 </script>
