@@ -3,35 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexvora Smart Calculator</title>
+<title>Nexvora Smart Scientific Calculator</title>
 <style>
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
+  font-family: 'Arial', sans-serif;
+  background: #1a1a1a;
   color: #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  align-items: flex-start;
+  padding: 20px 0;
 }
 .container {
-  max-width: 400px;
   width: 100%;
+  max-width: 420px;
   padding: 10px;
 }
 #display {
   width: 100%;
-  height: 60px;
-  font-size: 24px;
+  min-height: 70px;
+  font-size: 28px;
   text-align: right;
   padding: 10px;
   margin-bottom: 10px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   background: #222;
   color: #00ffcc;
+  word-wrap: break-word;
 }
 .buttons {
   display: grid;
@@ -39,36 +40,48 @@ body {
   gap: 8px;
 }
 button {
-  padding: 15px;
+  padding: 18px;
   font-size: 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: #1f2937;
-  color: white;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
 }
 button:active {
-  background: #334155;
+  background: #555;
 }
 .equal { background: #22c55e; }
 .clear { background: #ef4444; }
 footer {
   text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  opacity: 0.7;
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+.history {
+  background: #111;
+  padding: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #ccc;
 }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2 style="text-align:center;">🧠 Nexvora Smart Calculator</h2>
+<h2 style="text-align:center;">🧠 Nexvora Smart Scientific Calculator</h2>
+<div class="history" id="history"></div>
 <input type="text" id="display" readonly>
 
 <div class="buttons">
 <!-- Row 1 -->
-<button class="clear" onclick="clearDisplay()">C</button>
-<button onclick="deleteLast()">⌫</button>
+<button class="clear" onclick="allClear()">AC</button>
+<button onclick="deleteLast()">DEL</button>
 <button onclick="append('(')">(</button>
 <button onclick="append(')')">)</button>
 <button onclick="append('%')">%</button>
@@ -101,13 +114,26 @@ footer {
 <button onclick="append('**0.5')">√x</button>
 <button class="equal" onclick="calculate()">=</button>
 
-<!-- Row 6 (Extra) -->
+<!-- Row 6 Scientific -->
 <button onclick="append('Math.sin(')">sin</button>
 <button onclick="append('Math.cos(')">cos</button>
 <button onclick="append('Math.tan(')">tan</button>
 <button onclick="append('Math.log(')">ln</button>
 <button onclick="append('Math.log10(')">log</button>
 
+<!-- Row 7 Scientific -->
+<button onclick="append('Math.asin(')">asin</button>
+<button onclick="append('Math.acos(')">acos</button>
+<button onclick="append('Math.atan(')">atan</button>
+<button onclick="append('Math.PI')">π</button>
+<button onclick="append('Math.E')">e</button>
+
+<!-- Row 8 Extras -->
+<button onclick="append('Math.pow(')">x^y</button>
+<button onclick="append('1/(')">1/x</button>
+<button onclick="append('!')">n!</button>
+<button onclick="useAns()">Ans</button>
+<button onclick="clearHistory()">Clear History</button>
 </div>
 
 <footer>
@@ -117,34 +143,78 @@ Created by Abdur Rahman | Nexvora Lab's
 
 <script>
 let display = document.getElementById('display');
+let historyDiv = document.getElementById('history');
 let memory = 0;
+let lastAns = 0;
+let calcHistory = [];
 
+// Append value to display
 function append(value) {
     display.value += value;
 }
 
-function clearDisplay() {
+// Clear all
+function allClear() {
     display.value = '';
+    memory = 0;
 }
 
+// Delete last char
 function deleteLast() {
     display.value = display.value.slice(0, -1);
 }
 
+// Use previous answer
+function useAns() {
+    display.value += lastAns;
+}
+
+// Memory functions
+function memoryPlus() { memory += Number(display.value) || 0; display.value=''; }
+function memoryMinus() { memory -= Number(display.value) || 0; display.value=''; }
+function memoryRecall() { display.value = memory; }
+
+// Factorial helper
+function factorial(n) {
+    if(n < 0) return NaN;
+    if(n===0 || n===1) return 1;
+    let res = 1;
+    for(let i=2;i<=n;i++) res*=i;
+    return res;
+}
+
+// Calculate expression
 function calculate() {
     try {
-        let result = eval(display.value.replace(/÷/g,'/').replace(/×/g,'*'));
+        let expr = display.value.replace(/!/g, 'factorial');
+        expr = expr.replace(/÷/g,'/').replace(/×/g,'*');
+        let result = eval(expr);
+        lastAns = result;
         display.value = result;
+
+        // Save to history
+        calcHistory.push(`${expr} = ${result}`);
+        updateHistory();
     } catch {
         display.value = 'Error';
     }
 }
 
-// Memory functions
-function memoryPlus() { memory += Number(display.value) || 0; clearDisplay(); }
-function memoryMinus() { memory -= Number(display.value) || 0; clearDisplay(); }
-function memoryRecall() { display.value = memory; }
+// Update history UI
+function updateHistory() {
+    historyDiv.innerHTML = '';
+    for(let h of calcHistory) {
+        let div = document.createElement('div');
+        div.textContent = h;
+        historyDiv.appendChild(div);
+    }
+}
 
+// Clear history
+function clearHistory() {
+    calcHistory = [];
+    updateHistory();
+}
 </script>
 </body>
 </html>
