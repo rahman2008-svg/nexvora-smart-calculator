@@ -2,54 +2,64 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexvora Calculator</title>
+<title>Nexvora Smart Scientific Calculator</title>
 
 <link rel="manifest" href="manifest.json">
 
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #0f172a;
   color: white;
-  text-align: center;
 }
 
 h2 {
+  text-align: center;
   margin: 10px;
+  font-size: 22px;
 }
 
 .calculator {
-  width: 95%;
-  max-width: 400px;
+  max-width: 420px;
   margin: auto;
+  padding: 10px;
 }
 
 #display {
   width: 100%;
-  height: 70px;
-  font-size: 24px;
+  height: 80px;
+  font-size: 28px;
   text-align: right;
+  border-radius: 15px;
+  border: none;
+  padding: 10px;
   margin-bottom: 10px;
-  border-radius: 10px;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
+  gap: 8px;
 }
 
 button {
-  padding: 15px;
-  font-size: 16px;
-  border-radius: 10px;
+  height: 60px;
+  font-size: 18px;
+  border-radius: 12px;
   border: none;
+  background: #1e293b;
+  color: white;
+}
+
+button:active {
+  background: #334155;
 }
 
 footer {
+  text-align: center;
   margin-top: 15px;
-  font-size: 12px;
+  font-size: 13px;
   opacity: 0.7;
 }
 </style>
@@ -57,43 +67,43 @@ footer {
 
 <body>
 
-<h2>Nexvora Smart Calculator</h2>
+<h2>🧠 Nexvora Smart Calculator</h2>
 
 <div class="calculator">
 
-<input id="display" disabled>
+<input id="display" readonly>
 
 <div class="grid">
 
 <button onclick="clearAll()">C</button>
-<button onclick="clearEntry()">CE</button>
 <button onclick="deleteOne()">⌫</button>
 <button onclick="append('(')">(</button>
 <button onclick="append(')')">)</button>
+<button onclick="append('/')">÷</button>
 
 <button onclick="append('7')">7</button>
 <button onclick="append('8')">8</button>
 <button onclick="append('9')">9</button>
-<button onclick="append('/')">÷</button>
+<button onclick="append('*')">×</button>
 <button onclick="sqrt()">√</button>
 
 <button onclick="append('4')">4</button>
 <button onclick="append('5')">5</button>
 <button onclick="append('6')">6</button>
-<button onclick="append('*')">×</button>
+<button onclick="append('-')">-</button>
 <button onclick="square()">x²</button>
 
 <button onclick="append('1')">1</button>
 <button onclick="append('2')">2</button>
 <button onclick="append('3')">3</button>
-<button onclick="append('-')">-</button>
-<button onclick="cube()">x³</button>
+<button onclick="append('+')">+</button>
+<button onclick="power()">xʸ</button>
 
 <button onclick="append('0')">0</button>
 <button onclick="append('.')">.</button>
 <button onclick="calculate()">=</button>
-<button onclick="append('+')">+</button>
-<button onclick="power()">x^y</button>
+<button onclick="percent()">%</button>
+<button onclick="cube()">x³</button>
 
 <button onclick="sin()">sin</button>
 <button onclick="cos()">cos</button>
@@ -102,8 +112,8 @@ footer {
 <button onclick="ln()">ln</button>
 
 <button onclick="factorial()">x!</button>
-<button onclick="append(Math.PI)">π</button>
-<button onclick="append(Math.E)">e</button>
+<button onclick="append('Math.PI')">π</button>
+<button onclick="append('Math.E')">e</button>
 <button onclick="random()">Rand</button>
 <button onclick="ans()">ANS</button>
 
@@ -118,8 +128,8 @@ footer {
 </div>
 
 <footer>
-Created by Abdur Rahman <br>
-Nexvora Lab's
+✨ Created by Abdur Rahman <br>
+🚀 Nexvora Lab's
 </footer>
 
 <script>
@@ -130,23 +140,26 @@ let lastAnswer = 0;
 // Basic
 function append(val){ display.value += val; }
 function clearAll(){ display.value=""; }
-function clearEntry(){ display.value=""; }
 function deleteOne(){ display.value = display.value.slice(0,-1); }
 
 // Calculate
 function calculate(){
   try{
-    lastAnswer = eval(display.value);
+    let exp = display.value.replace(/×/g,'*').replace(/÷/g,'/');
+    lastAnswer = eval(exp);
     display.value = lastAnswer;
   }catch{
     display.value="Error";
   }
 }
 
-// Power
-function power(){
-  display.value += "**";
+// %
+function percent(){
+  display.value = eval(display.value)/100;
 }
+
+// Power
+function power(){ display.value += "**"; }
 
 // Math Functions
 function sqrt(){ display.value = Math.sqrt(eval(display.value)); }
@@ -162,31 +175,27 @@ function ln(){ display.value = Math.log(eval(display.value)); }
 
 function factorial(){
   let n = eval(display.value);
-  let res = 1;
+  if(n<0) return display.value="Error";
+  let res=1;
   for(let i=1;i<=n;i++) res*=i;
-  display.value = res;
+  display.value=res;
 }
 
-function random(){
-  display.value = Math.random();
-}
-
-function ans(){
-  display.value += lastAnswer;
-}
+function random(){ display.value = Math.random(); }
+function ans(){ display.value += lastAnswer; }
 
 // Memory
-function memoryAdd(){ memory += Number(display.value); }
-function memorySub(){ memory -= Number(display.value); }
+function memoryAdd(){ memory += Number(display.value)||0; }
+function memorySub(){ memory -= Number(display.value)||0; }
 function memoryRecall(){ display.value = memory; }
 function memoryClear(){ memory = 0; }
 
-// History Save
+// History
 function saveHistory(){
   let history = localStorage.getItem("history") || "";
-  history += display.value + "\n";
+  history += display.value + "\\n";
   localStorage.setItem("history", history);
-  alert("Saved!");
+  alert("Saved to history!");
 }
 
 // Service Worker
