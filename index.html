@@ -104,7 +104,7 @@ footer {
 <button onclick="append('1')">1</button>
 <button onclick="append('2')">2</button>
 <button onclick="append('3')">3</button>
-<button onclick="append('-')">-</button>
+<button onclick="append('+')">+</button>
 <button onclick="memoryMinus()">M-</button>
 
 <!-- Row 5 -->
@@ -183,11 +183,16 @@ function factorial(n) {
     return res;
 }
 
+// Replace factorial symbols
+function replaceFactorials(expr){
+    return expr.replace(/(\d+)!/g, (_, n) => factorial(Number(n)));
+}
+
 // Calculate expression
 function calculate() {
     try {
-        let expr = display.value.replace(/!/g, 'factorial');
-        expr = expr.replace(/÷/g,'/').replace(/×/g,'*');
+        let expr = display.value.replace(/÷/g,'/').replace(/×/g,'*');
+        expr = replaceFactorials(expr);
         let result = eval(expr);
         lastAns = result;
         display.value = result;
