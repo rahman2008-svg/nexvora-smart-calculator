@@ -2,191 +2,94 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexvora Pro Calculator</title>
-
-<link rel="manifest" href="manifest.json">
+<title>Nexvora Calculator</title>
 
 <style>
 body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #0f172a;
+  font-family: Arial;
+  background: #111;
   color: white;
-}
-
-.app {
-  max-width: 420px;
-  margin: auto;
-  padding: 15px;
-}
-
-.title {
   text-align: center;
-  font-size: 22px;
-  margin-bottom: 10px;
 }
 
-.display {
+.calculator {
+  max-width: 300px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+input {
   width: 100%;
-  height: 80px;
-  font-size: 30px;
+  height: 60px;
+  font-size: 24px;
   text-align: right;
-  border-radius: 15px;
-  padding: 10px;
-  background: #020617;
-  color: #00ffcc;
-  border: none;
   margin-bottom: 10px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
 }
 
 button {
-  height: 65px;
-  font-size: 18px;
-  border-radius: 12px;
-  border: none;
-  background: #1e293b;
-  color: white;
-  transition: 0.2s;
-}
-
-button:active {
-  background: #334155;
-}
-
-.op { background: #0ea5e9; }
-.eq { background: #22c55e; }
-.fn { background: #9333ea; }
-
-footer {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 13px;
-  opacity: 0.7;
+  width: 22%;
+  height: 60px;
+  margin: 1%;
+  font-size: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<h2>Nexvora Calculator</h2>
 
-<div class="title">🧠 Nexvora Pro Calculator</div>
+<div class="calculator">
+<input type="text" id="display" disabled>
 
-<input id="display" class="display" readonly>
-
-<div class="grid">
-
-<button onclick="clearAll()" class="op">C</button>
+<div>
+<button onclick="clearDisplay()">C</button>
 <button onclick="del()">⌫</button>
-<button onclick="append('%')">%</button>
 <button onclick="append('/')">÷</button>
+<button onclick="append('*')">×</button>
+</div>
 
+<div>
 <button onclick="append('7')">7</button>
 <button onclick="append('8')">8</button>
 <button onclick="append('9')">9</button>
-<button onclick="append('*')">×</button>
+<button onclick="append('-')">-</button>
+</div>
 
+<div>
 <button onclick="append('4')">4</button>
 <button onclick="append('5')">5</button>
 <button onclick="append('6')">6</button>
-<button onclick="append('-')">-</button>
+<button onclick="append('+')">+</button>
+</div>
 
+<div>
 <button onclick="append('1')">1</button>
 <button onclick="append('2')">2</button>
 <button onclick="append('3')">3</button>
-<button onclick="append('+')">+</button>
-
-<button onclick="append('0')">0</button>
-<button onclick="append('.')">.</button>
-<button onclick="calculate()" class="eq">=</button>
-<button onclick="sqrt()" class="fn">√</button>
-
-<button onclick="square()" class="fn">x²</button>
-<button onclick="cube()" class="fn">x³</button>
-<button onclick="power()" class="fn">xʸ</button>
-<button onclick="factorial()" class="fn">x!</button>
-
-<button onclick="sin()" class="fn">sin</button>
-<button onclick="cos()" class="fn">cos</button>
-<button onclick="tan()" class="fn">tan</button>
-<button onclick="log()" class="fn">log</button>
-
-<button onclick="ln()" class="fn">ln</button>
-<button onclick="append('Math.PI')">π</button>
-<button onclick="append('Math.E')">e</button>
-<button onclick="random()">Rand</button>
-
-<button onclick="mAdd()">M+</button>
-<button onclick="mSub()">M-</button>
-<button onclick="mRecall()">MR</button>
-<button onclick="mClear()">MC</button>
-
+<button onclick="calculate()">=</button>
 </div>
 
-<footer>
-✨ Created by Abdur Rahman  
-🚀 Nexvora Lab's
-</footer>
+<div>
+<button onclick="append('0')">0</button>
+<button onclick="append('.')">.</button>
+</div>
 
 </div>
 
 <script>
 let d = document.getElementById("display");
-let memory = 0;
 
-// input
 function append(v){ d.value += v; }
-function clearAll(){ d.value=""; }
+function clearDisplay(){ d.value = ""; }
 function del(){ d.value = d.value.slice(0,-1); }
 
-// calculate
 function calculate(){
   try{
-    let exp = d.value.replace(/×/g,'*').replace(/÷/g,'/');
-    d.value = eval(exp);
+    d.value = eval(d.value);
   }catch{
-    d.value="Error";
+    d.value = "Error";
   }
-}
-
-// functions
-function sqrt(){ d.value = Math.sqrt(eval(d.value)); }
-function square(){ d.value = Math.pow(eval(d.value),2); }
-function cube(){ d.value = Math.pow(eval(d.value),3); }
-function power(){ d.value += "**"; }
-
-function sin(){ d.value = Math.sin(eval(d.value)); }
-function cos(){ d.value = Math.cos(eval(d.value)); }
-function tan(){ d.value = Math.tan(eval(d.value)); }
-
-function log(){ d.value = Math.log10(eval(d.value)); }
-function ln(){ d.value = Math.log(eval(d.value)); }
-
-function factorial(){
- let n = eval(d.value);
- if(n<0) return d.value="Error";
- let r=1;
- for(let i=1;i<=n;i++) r*=i;
- d.value=r;
-}
-
-function random(){ d.value = Math.random(); }
-
-// memory
-function mAdd(){ memory += Number(d.value)||0; }
-function mSub(){ memory -= Number(d.value)||0; }
-function mRecall(){ d.value = memory; }
-function mClear(){ memory = 0; }
-
-// offline
-if('serviceWorker' in navigator){
- navigator.serviceWorker.register('service-worker.js');
 }
 </script>
 
