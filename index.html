@@ -1,206 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexvora Smart Scientific Calculator</title>
-
-<link rel="manifest" href="manifest.json">
-
+<title>Nexvora Lab's Smart Calculator</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: white;
-}
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+    }
 
-h2 {
-  text-align: center;
-  margin: 10px;
-  font-size: 22px;
-}
+    h1 {
+        text-align: center;
+        margin: 10px 0;
+        color: #222;
+    }
 
-.calculator {
-  max-width: 420px;
-  margin: auto;
-  padding: 10px;
-}
+    .calculator {
+        background: #222;
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        width: 95vw;
+    }
 
-#display {
-  width: 100%;
-  height: 80px;
-  font-size: 28px;
-  text-align: right;
-  border-radius: 15px;
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+    .display {
+        background: #444;
+        color: #fff;
+        font-size: 2em;
+        text-align: right;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        word-wrap: break-word;
+        min-height: 50px;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-}
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+    }
 
-button {
-  height: 60px;
-  font-size: 18px;
-  border-radius: 12px;
-  border: none;
-  background: #1e293b;
-  color: white;
-}
+    button {
+        padding: 15px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        background: #666;
+        color: white;
+        cursor: pointer;
+    }
 
-button:active {
-  background: #334155;
-}
+    button.operator { background: #f57c00; }
+    button.clear { background: #d32f2f; }
+    button.memory { background: #1976d2; }
+    button.zero { grid-column: span 2; }
+    button:hover { opacity: 0.8; }
 
-footer {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 13px;
-  opacity: 0.7;
-}
+    .history {
+        background: #fff;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        max-height: 150px;
+        overflow-y: auto;
+        font-size: 0.9em;
+        color: #222;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: #555;
+    }
 </style>
 </head>
-
 <body>
 
-<h2>🧠 Nexvora Smart Calculator</h2>
+<h1>Nexvora Lab's Smart Calculator</h1>
 
 <div class="calculator">
+    <div class="display" id="display">0</div>
 
-<input id="display" readonly>
+    <div class="buttons">
+        <!-- Memory -->
+        <button class="memory" onclick="memoryClear()">MC</button>
+        <button class="memory" onclick="memoryRecall()">MR</button>
+        <button class="memory" onclick="memoryAdd()">M+</button>
+        <button class="memory" onclick="memorySubtract()">M-</button>
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button onclick="backspace()">⌫</button>
 
-<div class="grid">
+        <!-- Numbers & basic -->
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button onclick="appendOperator('/')">÷</button>
+        <button onclick="appendOperator('(')">(</button>
+        <button onclick="appendOperator(')')">)</button>
 
-<button onclick="clearAll()">C</button>
-<button onclick="deleteOne()">⌫</button>
-<button onclick="append('(')">(</button>
-<button onclick="append(')')">)</button>
-<button onclick="append('/')">÷</button>
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button onclick="appendOperator('*')">×</button>
+        <button onclick="appendOperator('**')">xʸ</button>
+        <button onclick="appendOperator('Math.sqrt(')">√</button>
 
-<button onclick="append('7')">7</button>
-<button onclick="append('8')">8</button>
-<button onclick="append('9')">9</button>
-<button onclick="append('*')">×</button>
-<button onclick="sqrt()">√</button>
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button onclick="appendOperator('-')">-</button>
+        <button onclick="appendOperator('Math.sin(')">sin</button>
+        <button onclick="appendOperator('Math.cos(')">cos</button>
 
-<button onclick="append('4')">4</button>
-<button onclick="append('5')">5</button>
-<button onclick="append('6')">6</button>
-<button onclick="append('-')">-</button>
-<button onclick="square()">x²</button>
+        <button onclick="appendNumber('0')" class="zero">0</button>
+        <button onclick="appendOperator('.')">.</button>
+        <button onclick="appendOperator('+')">+</button>
+        <button onclick="appendOperator('Math.tan(')">tan</button>
+        <button onclick="appendOperator('Math.log(')">ln</button>
+        <button onclick="appendOperator('Math.log10(')">log</button>
 
-<button onclick="append('1')">1</button>
-<button onclick="append('2')">2</button>
-<button onclick="append('3')">3</button>
-<button onclick="append('+')">+</button>
-<button onclick="power()">xʸ</button>
+        <!-- Advanced -->
+        <button onclick="appendOperator('Math.exp(')">eˣ</button>
+        <button onclick="appendOperator('Math.PI')">π</button>
+        <button onclick="appendOperator('Math.E')">e</button>
+        <button onclick="appendOperator('!')">x!</button>
+        <button onclick="appendOperator('ANS')">ANS</button>
+        <button class="operator" onclick="calculate()">=</button>
+    </div>
 
-<button onclick="append('0')">0</button>
-<button onclick="append('.')">.</button>
-<button onclick="calculate()">=</button>
-<button onclick="percent()">%</button>
-<button onclick="cube()">x³</button>
-
-<button onclick="sin()">sin</button>
-<button onclick="cos()">cos</button>
-<button onclick="tan()">tan</button>
-<button onclick="log()">log</button>
-<button onclick="ln()">ln</button>
-
-<button onclick="factorial()">x!</button>
-<button onclick="append('Math.PI')">π</button>
-<button onclick="append('Math.E')">e</button>
-<button onclick="random()">Rand</button>
-<button onclick="ans()">ANS</button>
-
-<button onclick="memoryAdd()">M+</button>
-<button onclick="memorySub()">M-</button>
-<button onclick="memoryRecall()">MR</button>
-<button onclick="memoryClear()">MC</button>
-<button onclick="saveHistory()">Save</button>
-
+    <div class="history" id="history">
+        <strong>History:</strong>
+        <ul id="historyList"></ul>
+    </div>
 </div>
 
+<div class="footer">
+    Created by Abdur Rahman
 </div>
-
-<footer>
-✨ Created by Abdur Rahman <br>
-🚀 Nexvora Lab's
-</footer>
 
 <script>
-let display = document.getElementById("display");
+let display = document.getElementById('display');
+let currentInput = '';
 let memory = 0;
 let lastAnswer = 0;
+let historyList = document.getElementById('historyList');
 
-// Basic
-function append(val){ display.value += val; }
-function clearAll(){ display.value=""; }
-function deleteOne(){ display.value = display.value.slice(0,-1); }
+function appendNumber(num) { currentInput += num; display.textContent = currentInput; }
+function appendOperator(op) { currentInput += op; display.textContent = currentInput; }
+function clearDisplay() { currentInput = ''; display.textContent = '0'; }
+function backspace() { currentInput = currentInput.slice(0, -1); display.textContent = currentInput || '0'; }
 
-// Calculate
-function calculate(){
-  try{
-    let exp = display.value.replace(/×/g,'*').replace(/÷/g,'/');
-    lastAnswer = eval(exp);
-    display.value = lastAnswer;
-  }catch{
-    display.value="Error";
-  }
+function memoryClear() { memory = 0; }
+function memoryRecall() { appendNumber(memory); }
+function memoryAdd() { memory += evalExpression(); }
+function memorySubtract() { memory -= evalExpression(); }
+
+function evalExpression() {
+    try {
+        let exp = currentInput.replace(/(\d+)!/g, (_, n) => factorial(Number(n)));
+        exp = exp.replace(/ANS/g, lastAnswer);
+        return eval(exp);
+    } catch { return 0; }
 }
 
-// %
-function percent(){
-  display.value = eval(display.value)/100;
-}
+function factorial(n) { if(n<0) return NaN; let f=1; for(let i=2;i<=n;i++) f*=i; return f; }
 
-// Power
-function power(){ display.value += "**"; }
+function calculate() {
+    try {
+        let exp = currentInput.replace(/(\d+)!/g, (_, n) => factorial(Number(n)));
+        exp = exp.replace(/ANS/g, lastAnswer);
+        let result = eval(exp);
+        lastAnswer = result;
+        display.textContent = result;
 
-// Math Functions
-function sqrt(){ display.value = Math.sqrt(eval(display.value)); }
-function square(){ display.value = Math.pow(eval(display.value),2); }
-function cube(){ display.value = Math.pow(eval(display.value),3); }
+        // Add to history
+        let li = document.createElement('li');
+        li.textContent = currentInput + " = " + result;
+        historyList.appendChild(li);
 
-function sin(){ display.value = Math.sin(eval(display.value)); }
-function cos(){ display.value = Math.cos(eval(display.value)); }
-function tan(){ display.value = Math.tan(eval(display.value)); }
-
-function log(){ display.value = Math.log10(eval(display.value)); }
-function ln(){ display.value = Math.log(eval(display.value)); }
-
-function factorial(){
-  let n = eval(display.value);
-  if(n<0) return display.value="Error";
-  let res=1;
-  for(let i=1;i<=n;i++) res*=i;
-  display.value=res;
-}
-
-function random(){ display.value = Math.random(); }
-function ans(){ display.value += lastAnswer; }
-
-// Memory
-function memoryAdd(){ memory += Number(display.value)||0; }
-function memorySub(){ memory -= Number(display.value)||0; }
-function memoryRecall(){ display.value = memory; }
-function memoryClear(){ memory = 0; }
-
-// History
-function saveHistory(){
-  let history = localStorage.getItem("history") || "";
-  history += display.value + "\\n";
-  localStorage.setItem("history", history);
-  alert("Saved to history!");
-}
-
-// Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+        currentInput = '';
+    } catch {
+        display.textContent = 'Error';
+        currentInput = '';
+    }
 }
 </script>
 
