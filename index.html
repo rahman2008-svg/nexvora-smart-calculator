@@ -5,221 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexvora Smart Scientific Calculator</title>
 <style>
-* { box-sizing: border-box; }
+:root {
+  --bg: #1a1a1a;
+  --btn: #2c2c2c;
+  --btn-hover: #00ffcc;
+  --text: #fff;
+  --accent: #00ffcc;
+}
 body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  background: #1a1a1a;
-  color: #fff;
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
 }
-.container {
-  width: 100%;
-  max-width: 420px;
-  padding: 10px;
-}
+h1 { margin:10px; font-size:1.5rem; text-align:center;}
 #display {
-  width: 100%;
-  min-height: 70px;
-  font-size: 28px;
-  text-align: right;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 12px;
-  border: none;
-  background: #222;
-  color: #00ffcc;
-  word-wrap: break-word;
+  width: 95%;
+  height: 70px;
+  background:#000;
+  color: var(--accent);
+  font-size:2rem;
+  text-align:right;
+  padding:10px;
+  border-radius:10px;
+  overflow-x:auto;
 }
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+#history {
+  width:95%;
+  max-height:150px;
+  overflow-y:auto;
+  background:#222;
+  padding:5px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:0.9rem;
+}
+#buttons {
+  width:95%;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin-bottom:20px;
 }
 button {
-  padding: 18px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: none;
-  background: #333;
-  color: #fff;
-  cursor: pointer;
+  padding:15px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:8px;
+  background:var(--btn);
+  color:var(--text);
+  cursor:pointer;
+  transition:0.2s;
 }
-button:active {
-  background: #555;
-}
-.equal { background: #22c55e; }
-.clear { background: #ef4444; }
-footer {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 14px;
-  opacity: 0.8;
-}
-.history {
-  background: #111;
-  padding: 10px;
-  max-height: 150px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #ccc;
-}
+button:hover { background: var(--btn-hover); color:#000;}
 </style>
 </head>
 <body>
+<h1>Nexvora Smart Scientific Calculator</h1>
+<div id="display">0</div>
+<div id="history"></div>
+<div id="buttons">
+  <!-- Row 1 -->
+  <button onclick="clearAll()">AC</button>
+  <button onclick="deleteEntry()">DEL</button>
+  <button onclick="appendValue('%')">%</button>
+  <button onclick="appendValue('/')">÷</button>
+  <button onclick="appendValue('*')">×</button>
+  <button onclick="appendValue('-')">-</button>
 
-<div class="container">
-<h2 style="text-align:center;">🧠 Nexvora Smart Scientific Calculator</h2>
-<div class="history" id="history"></div>
-<input type="text" id="display" readonly>
+  <!-- Row 2 -->
+  <button onclick="appendValue('7')">7</button>
+  <button onclick="appendValue('8')">8</button>
+  <button onclick="appendValue('9')">9</button>
+  <button onclick="appendValue('(')">(</button>
+  <button onclick="appendValue(')')">)</button>
+  <button onclick="appendValue('+')">+</button>
 
-<div class="buttons">
-<!-- Row 1 -->
-<button class="clear" onclick="allClear()">AC</button>
-<button onclick="deleteLast()">DEL</button>
-<button onclick="append('(')">(</button>
-<button onclick="append(')')">)</button>
-<button onclick="append('%')">%</button>
+  <!-- Row 3 -->
+  <button onclick="appendValue('4')">4</button>
+  <button onclick="appendValue('5')">5</button>
+  <button onclick="appendValue('6')">6</button>
+  <button onclick="appendValue('Math.pow(')">x^y</button>
+  <button onclick="appendValue('Math.sqrt(')">√</button>
+  <button onclick="calculate()">=</button>
 
-<!-- Row 2 -->
-<button onclick="append('7')">7</button>
-<button onclick="append('8')">8</button>
-<button onclick="append('9')">9</button>
-<button onclick="append('/')">÷</button>
-<button onclick="memoryRecall()">MR</button>
+  <!-- Row 4 -->
+  <button onclick="appendValue('1')">1</button>
+  <button onclick="appendValue('2')">2</button>
+  <button onclick="appendValue('3')">3</button>
+  <button onclick="appendValue('Math.sin(')">sin</button>
+  <button onclick="appendValue('Math.cos(')">cos</button>
+  <button onclick="appendValue('Math.tan(')">tan</button>
 
-<!-- Row 3 -->
-<button onclick="append('4')">4</button>
-<button onclick="append('5')">5</button>
-<button onclick="append('6')">6</button>
-<button onclick="append('*')">×</button>
-<button onclick="memoryPlus()">M+</button>
-
-<!-- Row 4 -->
-<button onclick="append('1')">1</button>
-<button onclick="append('2')">2</button>
-<button onclick="append('3')">3</button>
-<button onclick="append('+')">+</button>
-<button onclick="memoryMinus()">M-</button>
-
-<!-- Row 5 -->
-<button onclick="append('0')">0</button>
-<button onclick="append('.')">.</button>
-<button onclick="append('**2')">x²</button>
-<button onclick="append('**0.5')">√x</button>
-<button class="equal" onclick="calculate()">=</button>
-
-<!-- Row 6 Scientific -->
-<button onclick="append('Math.sin(')">sin</button>
-<button onclick="append('Math.cos(')">cos</button>
-<button onclick="append('Math.tan(')">tan</button>
-<button onclick="append('Math.log(')">ln</button>
-<button onclick="append('Math.log10(')">log</button>
-
-<!-- Row 7 Scientific -->
-<button onclick="append('Math.asin(')">asin</button>
-<button onclick="append('Math.acos(')">acos</button>
-<button onclick="append('Math.atan(')">atan</button>
-<button onclick="append('Math.PI')">π</button>
-<button onclick="append('Math.E')">e</button>
-
-<!-- Row 8 Extras -->
-<button onclick="append('Math.pow(')">x^y</button>
-<button onclick="append('1/(')">1/x</button>
-<button onclick="append('!')">n!</button>
-<button onclick="useAns()">Ans</button>
-<button onclick="clearHistory()">Clear History</button>
-</div>
-
-<footer>
-Created by Abdur Rahman | Nexvora Lab's
-</footer>
+  <!-- Row 5 -->
+  <button onclick="appendValue('0')">0</button>
+  <button onclick="appendValue('.')">.</button>
+  <button onclick="appendValue('Math.PI')">π</button>
+  <button onclick="appendValue('Math.E')">e</button>
+  <button onclick="recallAnswer()">Ans</button>
+  <button onclick="appendValue('!')">n!</button>
 </div>
 
 <script>
 let display = document.getElementById('display');
 let historyDiv = document.getElementById('history');
-let memory = 0;
-let lastAns = 0;
-let calcHistory = [];
+let lastAnswer = 0;
+let history = JSON.parse(localStorage.getItem('calcHistory')) || [];
 
-// Append value to display
-function append(value) {
-    display.value += value;
+function renderHistory() {
+  historyDiv.innerHTML = history.join('<br>');
+}
+renderHistory();
+
+function appendValue(val) {
+  if(display.innerText==='0') display.innerText=val;
+  else display.innerText += val;
 }
 
-// Clear all
-function allClear() {
-    display.value = '';
-    memory = 0;
+function clearAll() {
+  display.innerText='0';
 }
 
-// Delete last char
-function deleteLast() {
-    display.value = display.value.slice(0, -1);
+function deleteEntry() {
+  display.innerText = display.innerText.slice(0,-1) || '0';
 }
 
-// Use previous answer
-function useAns() {
-    display.value += lastAns;
-}
-
-// Memory functions
-function memoryPlus() { memory += Number(display.value) || 0; display.value=''; }
-function memoryMinus() { memory -= Number(display.value) || 0; display.value=''; }
-function memoryRecall() { display.value = memory; }
-
-// Factorial helper
-function factorial(n) {
-    if(n < 0) return NaN;
-    if(n===0 || n===1) return 1;
-    let res = 1;
-    for(let i=2;i<=n;i++) res*=i;
-    return res;
-}
-
-// Replace factorial symbols
-function replaceFactorials(expr){
-    return expr.replace(/(\d+)!/g, (_, n) => factorial(Number(n)));
-}
-
-// Calculate expression
 function calculate() {
-    try {
-        let expr = display.value.replace(/÷/g,'/').replace(/×/g,'*');
-        expr = replaceFactorials(expr);
-        let result = eval(expr);
-        lastAns = result;
-        display.value = result;
-
-        // Save to history
-        calcHistory.push(`${expr} = ${result}`);
-        updateHistory();
-    } catch {
-        display.value = 'Error';
-    }
+  try {
+    let exp = display.innerText.replace(/×/g,'*').replace(/÷/g,'/').replace(/n!/g,'factorial');
+    let result = eval(exp);
+    lastAnswer = result;
+    display.innerText = result;
+    addToHistory(display.innerText + " = " + result);
+  } catch(e) {
+    display.innerText='Error';
+  }
 }
 
-// Update history UI
-function updateHistory() {
-    historyDiv.innerHTML = '';
-    for(let h of calcHistory) {
-        let div = document.createElement('div');
-        div.textContent = h;
-        historyDiv.appendChild(div);
-    }
+function factorial(n) {
+  n = Math.floor(n);
+  if(n<0) return 'Error';
+  if(n===0) return 1;
+  let res=1;
+  for(let i=1;i<=n;i++) res*=i;
+  return res;
 }
 
-// Clear history
-function clearHistory() {
-    calcHistory = [];
-    updateHistory();
+function recallAnswer() {
+  appendValue(lastAnswer);
 }
+
+function addToHistory(entry){
+  history.push(entry);
+  if(history.length>50) history.shift(); // Keep last 50
+  localStorage.setItem('calcHistory', JSON.stringify(history));
+  renderHistory();
+}
+
+// Responsive font size
+window.addEventListener('resize', ()=>{
+  let width = window.innerWidth;
+  display.style.fontSize = Math.max(24,width/15)+'px';
+});
 </script>
 </body>
 </html>
